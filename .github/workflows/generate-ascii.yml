@@ -3,20 +3,67 @@ name: Generate ASCII Artwork
 on: push
 
 jobs:
-    ascii_job:
+    # ascii_job:
+    #     runs-on: ubuntu-latest
+    #     steps:
+    #     - name: Checkout Repo
+    #       uses: actions/checkout@v4
+
+    #     - name: List Repo Files
+    #       run: ls -ltra
+
+    #     - name: Executing Shell Script
+    #       run: | 
+    #            chmod +x my_script.sh
+    #            ./my_script.sh   
+    
+    build_job_1:
         runs-on: ubuntu-latest
         steps:
-        - name: Checkout Repo
-          uses: actions/checkout@v4
+        - name: Install Cowsay CMD
+          run: sudo apt-get install cowsay -y
 
-        - name: List Repo Files
-          run: ls -ltra
+        - name: Execute Cowsay CMD
+          run:  cowsay -f dragon "Run for cover , I am a DRAGON ...RAWR" >> dragon.txt
 
-        - name: Executing Shell Script
-          run: | 
-               chmod +x my_script.sh
-               ./my_script.sh   
-                
+        - name: Upload the Dragon text file
+          uses: actions/upload-artifact@v3
+          with: 
+             name: dragon-text-file
+             path: dragon.txt
+    
+    test_job_2:
+        needs: build_job_1
+        runs-on: ubuntu-latest
+        steps:
+        - name: Download the Dragon text file
+          uses: actions/download-artifact@v3
+          with: 
+               name: dragon-text-file
+               
+
+        - name: Test File Exists
+          run: grep -i "dragon" dragon.txt
+
+ 
+    deploy_job_3:
+        needs: [build_job_1,test_job_2]
+        runs-on: ubuntu-latest
+        steps:
+        - name: Download the Dragon text file
+          uses: actions/download-artifact@v3
+          with: 
+                 name: dragon-text-file
+        - name: Read File
+          run: cat dragon.txt
+          
+        - name: Deploy 
+          run: echo Deploying ... .. .
+
+               
+
+
+
 #                
                  #adding permission to made file executable 
 
