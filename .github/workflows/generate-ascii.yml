@@ -14,8 +14,8 @@ jobs:
 
         - name: Executing Shell Script
           run: | 
-               chmod +x ascii-script.sh
-               .github/workflows/ascii-script.sh   
+               chmod +x my_script.sh
+               ./my_script.sh   
                 
 #                
                  #adding permission to made file executable 
